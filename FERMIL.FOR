@@ -1,0 +1,30 @@
+      FUNCTION FERMIL(E)
+        IMPLICIT NONE
+        REAL*8 FERMIL,E
+        real*8 VL,VR,KT1,KT2
+      common /VL/VL/VR/VR/KT1/KT1/KT2/KT2
+
+
+!     HERE WE SET CONDITIONS FOR KT=0 
+!     WHEN E<EL THE 1 IN THE DENOMINATOR DOMINATES, THEREFORE 1
+!     WHERE E>EL THE EXP IN THE DENOMINATOR DOMINATES, THEREFORE 0
+        IF(KT1.EQ.0.0d0) then 
+        IF(E.LT.VL) then 
+        FERMIL=1.0d0 
+        else 
+        FERMIL=0.0d0
+        endif
+
+!     HERE ARE THE CONDITIONS FOR KT.NE.0
+!     IF E.LT.VL. THE FERMI DIRAC IS THE SAME, SINCE THE EXPONENT CAN BE SMALLER THAN 1
+!     IF E.GT.VL. WE WOULD HAVE TO DIVIDE THE NUMERATOR AND DEMINATOR BY EXP(E-VL/KT1) TO MAKE SURE THE EXPONENT 
+!        WON'T BLOW UP
+
+        else IF(E.LT.VL) THEN
+        FERMIL=1.0d0/(1.0d0+dexp((E-VL)/KT1))
+        else 
+        FERMIL=dexp(-(E-VL)/KT1)/(1.0d0+dexp(-(E-VL)/KT1))
+        
+        ENDIF
+        RETURN
+        END
